@@ -35,16 +35,25 @@ axes1Handle.YTick = yMajorTickPositions;
 axes2Handle.YTick = yDegMajorTickPositions;
 axes2Handle.YTickLabel = cellfun(@(x) [num2str(x),'°'], num2cell(yDegMajorTickMarks),'UniformOutput',false);
 
-labeledTicks = [0.1, 0.2, 0.5, 1, 2, 5, 10]*order;
-xLabels = tickLabels(xMajorTickMarks, labeledTicks);
+labeledXTicks = [0.1, 0.2, 0.5, 1, 2, 5, 10]*order;
+xLabels = tickLabels(xMajorTickMarks, labeledXTicks);
 axes1Handle.XTickLabel = xLabels;
 
-labeledTicks = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20];
-yLabels = tickLabels(yMajorTickMarks, labeledTicks);
+labeledYTicks = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20];
+yLabels = tickLabels(yMajorTickMarks, labeledYTicks);
 axes1Handle.YTickLabel = yLabels;
 
 for i = -210:10:170
-    if i == -180 || i==-90 || i==90
+    if i == 10
+        plot(axes2Handle, [-26,-20.75]+dbshift, deg2db([i, i]), 'k', 'HitTest', 'off');
+        plot(axes2Handle, [-19.25,-14.75]+dbshift, deg2db([i, i]), 'k', 'HitTest', 'off');
+        plot(axes2Handle, [-13.25,-6.75]+dbshift, deg2db([i, i]), 'k', 'HitTest', 'off');
+        plot(axes2Handle, [-5.25,-0.5]+dbshift, deg2db([i, i]), 'k', 'HitTest', 'off');
+        plot(axes2Handle, [0.5,5.5]+dbshift, deg2db([i, i]), 'k', 'HitTest', 'off');
+        plot(axes2Handle, [6.5,13.5]+dbshift, deg2db([i, i]), 'k', 'HitTest', 'off');
+        plot(axes2Handle, [14.5,19.25]+dbshift, deg2db([i, i]), 'k', 'HitTest', 'off');
+        plot(axes2Handle, [20.75,26]+dbshift, deg2db([i, i]), 'k', 'HitTest', 'off');
+    elseif i == -180 || i==-90 || i==90
         plot(axes2Handle, [-26,26]+dbshift, deg2db([i, i]), 'k--', 'HitTest', 'off');
     elseif i == 0
         plot(axes2Handle, [-26,26]+dbshift, deg2db([i, i]), 'k', 'LineWidth', 2, 'HitTest', 'off');
@@ -54,7 +63,12 @@ for i = -210:10:170
 end
 
 for i = -26:2:26
-    plot(axes2Handle, [i, i]+dbshift, deg2db([-210, 170]), 'k', 'HitTest', 'off');
+    if any(abs(gain2db(labeledXTicks) - i) < 0.1)
+        plot(axes2Handle, [i, i]+dbshift, deg2db([-210, 8]), 'k', 'HitTest', 'off');
+        plot(axes2Handle, [i, i]+dbshift, deg2db([18, 170]), 'k', 'HitTest', 'off');
+    else
+        plot(axes2Handle, [i, i]+dbshift, deg2db([-210, 170]), 'k', 'HitTest', 'off');
+    end
 end
 
 [amp,phase,wout] = bode(sys, {db2gain(-26+dbshift),db2gain(26+dbshift)});
