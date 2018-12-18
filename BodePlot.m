@@ -3,12 +3,21 @@ function BodePlot(sys)
 order = 1;
 dbshift = gain2db(order);
 
+axesWidth = 261.120/10;
+axesHeight = 190.293/10;
+
 figureHandle = figure;
 hold on
 axes1Handle = gca;
+axes1Handle.Units = 'centimeters';
 axes1Position = get(axes1Handle, 'Position');
+axes1Position(3:4) = [axesWidth axesHeight];
+axes1Handle.Position = axes1Position;
 set(axes1Handle, 'YAxisLocation','Left','YLim',[-42,34],'XAxisLocation','Origin','XLim',[-26,26]+dbshift,'TickDir','out');
-axes2Handle = axes('Position',axes1Position,'YAxisLocation','Right','YLim',deg2db([-210,170]),'XTick',[],'XLim',[-26,26]+dbshift,'Color','none','TickDir','out','NextPlot','add');
+axes2Handle = axes('Units','centimeters','Position',axes1Position,'YAxisLocation','Right','YLim',deg2db([-210,170]),'XTick',[],'XLim',[-26,26]+dbshift,'Color','none','TickDir','out','NextPlot','add');
+
+AxesSetup(axes1Handle);
+AxesSetup(axes2Handle);
 
 linkaxes([axes1Handle, axes2Handle],'x');
 
@@ -57,7 +66,8 @@ gain = gain2db(amp);
 plot(axes1Handle, omega, gain, 'LineWidth', 2, 'HitTest', 'on');
 plot(axes2Handle, omega, deg2db(phase),'--', 'LineWidth', 2, 'HitTest', 'on');
 
-removeMargin(axes1Handle,axes2Handle);
+figureHandle.Units = 'centimeters';
+FitFigure(figureHandle,axes1Handle,axes2Handle);
 
 end
 
@@ -126,6 +136,54 @@ width = outerPos(3) + -tightInset(1) - tightInset(3);
 height = outerPos(4) + -tightInset(2) - tightInset(4);
 
 pos = [left bottom width height];
+
+end
+
+function AxesSetup(axesHandle)
+
+axesHandle.LabelFontSizeMultiplier = 1.0;
+axesHandle.FontSize = 10;
+
+end
+
+function FitFigure(fig,ax1,ax2)
+
+ti1 = ax1.TightInset;
+ti2 = ax2.TightInset;
+
+pos1 = ax1.Position;
+pos2 = ax2.Position;
+
+maxInsets = max([ti1;ti2]);
+
+[size,pos] = getMinBoundingBox(pos1, maxInsets);
+
+ip = fig.InnerPosition;
+ip(3:4) = size;
+ip(1:2) = [0 0];
+fig.InnerPosition = ip;
+
+pos1(1:2) = pos;
+pos2(1:2) = pos;
+
+ax1.Position = pos1;
+ax2.Position = pos2;
+
+op = fig.OuterPosition;
+op(1:2) = [2 2];
+fig.OuterPosition = op;
+
+end
+
+function [size,pos] = getMinBoundingBox(position, tightInset)
+
+left = tightInset(1);
+bottom = tightInset(2);
+width = position(3) + tightInset(1) + tightInset(3);
+height = position(4) + tightInset(2) + tightInset(4);
+
+size = [width height];
+pos = [left bottom];
 
 end
 
