@@ -112,35 +112,6 @@ deg = db/2*10;
 
 end
 
-function removeMargin(ax1,ax2)
-
-ti1 = ax1.TightInset;
-ti2 = ax2.TightInset;
-
-op1 = ax1.OuterPosition;
-op2 = ax2.OuterPosition;
-
-maxInsets = max([ti1;ti2]);
-
-pos1 = getMaxPos(op1, maxInsets);
-pos2 = getMaxPos(op2, maxInsets);
-
-ax1.Position = pos1;
-ax2.Position = pos2;
-
-end
-
-function pos = getMaxPos(outerPos, tightInset)
-
-left = outerPos(1) + tightInset(1);
-bottom = outerPos(2) + tightInset(2);
-width = outerPos(3) + -tightInset(1) - tightInset(3);
-height = outerPos(4) + -tightInset(2) - tightInset(4);
-
-pos = [left bottom width height];
-
-end
-
 function AxesSetup(axesHandle)
 
 axesHandle.LabelFontSizeMultiplier = 1.0;
