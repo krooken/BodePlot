@@ -69,6 +69,8 @@ plot(axes2Handle, omega, deg2db(phase),'--', 'LineWidth', 2, 'HitTest', 'on');
 figureHandle.Units = 'centimeters';
 FitFigure(figureHandle,axes1Handle,axes2Handle);
 
+PrintFigure(figureHandle);
+
 end
 
 function labels = tickLabels(tickMarks, ticksLabeled)
@@ -184,6 +186,16 @@ height = position(4) + tightInset(2) + tightInset(4);
 
 size = [width height];
 pos = [left bottom];
+
+end
+
+function PrintFigure(fig)
+
+fig.PaperPositionMode = 'auto';
+figurePosition = fig.PaperPosition;
+fig.PaperSize = [figurePosition(3) figurePosition(4)];
+
+print(fig, 'untitled','-dpdf');
 
 end
 
