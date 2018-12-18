@@ -13,8 +13,8 @@ axes1Handle.Units = 'centimeters';
 axes1Position = get(axes1Handle, 'Position');
 axes1Position(3:4) = [axesWidth axesHeight];
 axes1Handle.Position = axes1Position;
-set(axes1Handle, 'YAxisLocation','Left','YLim',[-42,34],'XAxisLocation','Origin','XLim',[-26,26]+dbshift,'TickDir','out');
-axes2Handle = axes('Units','centimeters','Position',axes1Position,'YAxisLocation','Right','YLim',deg2db([-210,170]),'XTick',[],'XLim',[-26,26]+dbshift,'Color','none','TickDir','out','NextPlot','add');
+set(axes1Handle, 'YAxisLocation','Left','YLim',[-42,34],'XAxisLocation','Origin','XLim',[-26,26]+dbshift,'TickDir','out', 'HitTest', 'off');
+axes2Handle = axes('Units','centimeters','Position',axes1Position,'YAxisLocation','Right','YLim',deg2db([-210,170]),'XTick',[],'XLim',[-26,26]+dbshift,'Color','none','TickDir','out','NextPlot','add', 'HitTest', 'off');
 
 AxesSetup(axes1Handle);
 AxesSetup(axes2Handle);
