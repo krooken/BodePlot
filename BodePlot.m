@@ -1,6 +1,8 @@
-function BodePlot(sys)
+function BodePlot(sys,order)
 
-order = 1;
+if nargin < 2
+    order = 1;
+end
 dbshift = gain2db(order);
 
 axesWidth = 261.120/10;
@@ -13,8 +15,24 @@ axes1Handle.Units = 'centimeters';
 axes1Position = get(axes1Handle, 'Position');
 axes1Position(3:4) = [axesWidth axesHeight];
 axes1Handle.Position = axes1Position;
-set(axes1Handle, 'YAxisLocation','Left','YLim',[-42,34],'XAxisLocation','Origin','XLim',[-26,26]+dbshift,'TickDir','out', 'HitTest', 'off');
-axes2Handle = axes('Units','centimeters','Position',axes1Position,'YAxisLocation','Right','YLim',deg2db([-210,170]),'XTick',[],'XLim',[-26,26]+dbshift,'Color','none','TickDir','out','NextPlot','add', 'HitTest', 'off');
+set(axes1Handle, ...
+    'YAxisLocation','Left', ...
+    'YLim',[-42,34], ...
+    'XAxisLocation','Origin', ...
+    'XLim',[-26,26]+dbshift, ...
+    'TickDir','out', ...
+    'HitTest', 'off');
+axes2Handle = axes( ...
+    'Units','centimeters', ...
+    'Position',axes1Position, ...
+    'YAxisLocation','Right', ...
+    'YLim',deg2db([-210,170]), ...
+    'XTick',[], ...
+    'XLim',[-26,26]+dbshift, ...
+    'Color','none', ...
+    'TickDir','out', ...
+    'NextPlot','add', ...
+    'HitTest', 'off');
 
 AxesSetup(axes1Handle);
 AxesSetup(axes2Handle);
@@ -63,7 +81,7 @@ for i = -210:10:170
 end
 
 for i = -26:2:26
-    if any(abs(gain2db(labeledXTicks) - i) < 0.1)
+    if any(abs(gain2db(labeledXTicks/order) - i) < 0.1)
         plot(axes2Handle, [i, i]+dbshift, deg2db([-210, 8]), 'k', 'HitTest', 'off');
         plot(axes2Handle, [i, i]+dbshift, deg2db([18, 170]), 'k', 'HitTest', 'off');
     else
@@ -79,6 +97,12 @@ gain = gain2db(amp);
 
 plot(axes1Handle, omega, gain, 'LineWidth', 2, 'HitTest', 'on');
 plot(axes2Handle, omega, deg2db(phase),'--', 'LineWidth', 2, 'HitTest', 'on');
+
+% TODO:
+% Use datacursormode to make data tool tip clearer.
+% Frequency rad/s
+% Magnitude dB
+% Phase deg
 
 figureHandle.Units = 'centimeters';
 FitFigure(figureHandle,axes1Handle,axes2Handle);
